@@ -1,0 +1,52 @@
+<!-- notification_item.xml -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="13dp"
+    android:background="@color/white"
+    android:paddingStart="16dp"
+    android:paddingEnd="16dp"
+    android:paddingTop="8dp"
+    android:paddingBottom="8dp"
+    android:layout_marginBottom="10dp">
+
+    <!-- Title -->
+    <TextView
+        android:id="@+id/notificationTitleTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/blue_font"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:text="TextView" />
+
+    <!-- Message and Time Layout -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <!-- Message -->
+        <TextView
+            android:id="@+id/notificationMessageTextView"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:textColor="#434343"
+            android:text="TextView"
+            android:textSize="14sp" />
+
+        <!-- Time -->
+        <TextView
+            android:id="@+id/notificationTimeTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:textColor="@color/gray"
+            android:textSize="12sp"
+            android:text="TextView" />
+
+    </LinearLayout>
+</LinearLayout>
