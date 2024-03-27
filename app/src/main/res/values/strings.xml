@@ -32,4 +32,8 @@
     <string name="_6_hrs_string">6 hrs</string>
     <string name="input_hours_of_sleep_string">Input hours of sleep</string>
     <string name="update_sleep_string">UPDATE SLEEP</string>
+
+    <!-- update__brush0 strings -->
+
+    <string name="update_brush_string">UPDATE BRUSH</string>
 </resources>

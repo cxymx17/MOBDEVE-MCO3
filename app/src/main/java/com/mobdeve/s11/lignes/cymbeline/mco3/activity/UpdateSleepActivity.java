@@ -6,6 +6,7 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.content.SharedPreferences;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -88,6 +89,10 @@ public class UpdateSleepActivity extends AppCompatActivity {
 
 
     private void saveSleepHours() {
+        // Get the current logged-in username
+        SharedPreferences sharedPreferences = getSharedPreferences("user_session", MODE_PRIVATE);
+        String loggedInUsername = sharedPreferences.getString("username", "");
+
         // Get the current date and time
         Calendar calendar = Calendar.getInstance();
         SimpleDateFormat sdfDate = new SimpleDateFormat("MM/dd/yyyy", Locale.getDefault());

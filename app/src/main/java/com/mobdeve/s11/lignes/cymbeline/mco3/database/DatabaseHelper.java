@@ -7,20 +7,25 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "UserInfo.db";
     private static final String TABLE_NAME = "user_table";
     private static final String SLEEP_TABLE_NAME = "sleep_table";
+    private static final String BRUSH_TABLE_NAME = "brush_table";
     public static final String COL_2 = "USERNAME";
     public static final String COL_3 = "PASSWORD";
     public static final String COL_4 = "EMAIL";
     public static final String COL_5 = "BIRTHDAY";
     public static final String COL_SLEEP_DATE = "SLEEP_DATE";
     public static final String COL_SLEEP_HOURS = "SLEEP_HOURS";
+    public static final String COL_BRUSH_DATE = "BRUSH_DATE";
+    public static final String COL_BRUSH_COUNT = "BRUSH_COUNT";
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, 1);
@@ -33,12 +38,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         // Create sleep_table
         db.execSQL("CREATE TABLE " + SLEEP_TABLE_NAME + " (ID INTEGER PRIMARY KEY AUTOINCREMENT, " + COL_SLEEP_DATE + " TEXT, " + COL_SLEEP_HOURS + " TEXT)");
+
+        // Create brush_table
+        db.execSQL("CREATE TABLE " + BRUSH_TABLE_NAME + " (ID INTEGER PRIMARY KEY AUTOINCREMENT, " + COL_BRUSH_DATE + " TEXT, " + COL_BRUSH_COUNT + " INTEGER)");
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + SLEEP_TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + BRUSH_TABLE_NAME);
         onCreate(db);
     }
 
@@ -50,6 +59,57 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         int rowsDeleted = db.delete(SLEEP_TABLE_NAME, selection, selectionArgs);
         return rowsDeleted > 0;
+    }
+
+    // Method to delete brush count for a specific date
+    public boolean deleteBrushCount(String brushDate) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String selection = COL_BRUSH_DATE + " = ?";
+        String[] selectionArgs = {brushDate};
+
+        int rowsDeleted = db.delete(BRUSH_TABLE_NAME, selection, selectionArgs);
+        return rowsDeleted > 0;
+    }
+
+    // Method to insert or update brush count for a specific date
+    public boolean updateOrInsertBrushCount(String brushDate, int brushCount) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(COL_BRUSH_DATE, brushDate);
+        contentValues.put(COL_BRUSH_COUNT, brushCount);
+
+        // Check if brush count already exists for the given date
+        if (getBrushCount(brushDate) != -1) {
+            // Brush count already exists, so update
+            int rowsAffected = db.update(BRUSH_TABLE_NAME, contentValues, COL_BRUSH_DATE + "=?", new String[]{brushDate});
+            return rowsAffected > 0;
+        } else {
+            // Brush count doesn't exist, so insert
+            long result = db.insert(BRUSH_TABLE_NAME, null, contentValues);
+            return result != -1;
+        }
+    }
+
+    // Method to retrieve brush count for a specific date
+    public int getBrushCount(String brushDate) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String[] columns = {COL_BRUSH_COUNT};
+        String selection = COL_BRUSH_DATE + " = ?";
+        String[] selectionArgs = {brushDate};
+        Cursor cursor = db.query(BRUSH_TABLE_NAME, columns, selection, selectionArgs, null, null, null);
+        int brushCount = -1; // Default value if brush count not found
+
+        if (cursor != null && cursor.moveToFirst()) {
+            int columnIndex = cursor.getColumnIndex(COL_BRUSH_COUNT);
+            if (columnIndex != -1) {
+                brushCount = cursor.getInt(columnIndex);
+            } else {
+                Log.e("DatabaseHelper", "Column COL_BRUSH_COUNT does not exist in the cursor");
+            }
+            cursor.close();
+        }
+        return brushCount;
     }
 
 
@@ -105,7 +165,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         String[] columns = {COL_2};
         String selection = COL_2 + " = ?";
         String[] selectionArgs = {loggedInUsername};
-        Cursor cursor = db.query(TABLE_NAME, columns, selection, selectionArgs, null, null, null);
+        Cursor cursor = db.query(TABLE_NAME, columns, selection, selectionArgs, null, null,
+                null);
         String username = "";
 
         if (cursor != null && cursor.moveToFirst()) {

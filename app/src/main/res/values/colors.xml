@@ -37,4 +37,10 @@
     <color name="rectangle_26_color">#FFFFFF</color>
     <color name="rectangle_27_color">#005584</color>
     <color name="_6_hrs_color">#000203</color>
+
+    <!-- update__brush0 colors -->
+
+
+    <color name="_bg__update__brush0_ek2_color">#C3EAFF</color>
+    <color name="update_brush_color">#005A8C</color>
 </resources>

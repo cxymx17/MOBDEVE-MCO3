@@ -51,6 +51,19 @@ public class DashboardActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        // Find the rectangle_13_ek1 view
+        View rectangle13Ek1 = findViewById(R.id.rectangle_13_ek1);
+
+        // Set OnClickListener to rectangle_13_ek1
+        rectangle13Ek1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Navigate to update_brush.xml page
+                Intent intent = new Intent(DashboardActivity.this, UpdateBrushActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     @Override
@@ -85,5 +98,4 @@ public class DashboardActivity extends AppCompatActivity {
         // Set the rotation to start from the top
         progressBar.setRotation(-90);
     }
-
 }

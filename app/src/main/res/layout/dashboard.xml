@@ -187,8 +187,9 @@
 					android:layout_marginTop="95dp"
 					android:indeterminate="false"
 					android:max="100"
-					android:progress="90"
+					android:progress="70"
 					android:rotation="-90"
+					android:scaleY="-1"
 					android:progressDrawable="@drawable/circular_progress_bar"
 					app:layout_constraintStart_toStartOf="parent"
 					app:layout_constraintTop_toTopOf="parent" />
