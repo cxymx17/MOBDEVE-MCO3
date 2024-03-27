@@ -7,14 +7,20 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Locale;
+
 public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "UserInfo.db";
     private static final String TABLE_NAME = "user_table";
+    private static final String SLEEP_TABLE_NAME = "sleep_table";
     public static final String COL_2 = "USERNAME";
     public static final String COL_3 = "PASSWORD";
     public static final String COL_4 = "EMAIL";
     public static final String COL_5 = "BIRTHDAY";
-
+    public static final String COL_SLEEP_DATE = "SLEEP_DATE";
+    public static final String COL_SLEEP_HOURS = "SLEEP_HOURS";
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, 1);
@@ -22,14 +28,30 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL("create table " + TABLE_NAME + " (ID INTEGER PRIMARY KEY AUTOINCREMENT,USERNAME TEXT,PASSWORD TEXT, EMAIL TEXT, BIRTHDAY TEXT)");
+        // Create user_table
+        db.execSQL("CREATE TABLE " + TABLE_NAME + " (ID INTEGER PRIMARY KEY AUTOINCREMENT, " + COL_2 + " TEXT, " + COL_3 + " TEXT, " + COL_4 + " TEXT, " + COL_5 + " TEXT)");
+
+        // Create sleep_table
+        db.execSQL("CREATE TABLE " + SLEEP_TABLE_NAME + " (ID INTEGER PRIMARY KEY AUTOINCREMENT, " + COL_SLEEP_DATE + " TEXT, " + COL_SLEEP_HOURS + " TEXT)");
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + SLEEP_TABLE_NAME);
         onCreate(db);
     }
+
+    // Method to delete sleep hours for a specific date
+    public boolean deleteSleepHours(String sleepDate) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String selection = COL_SLEEP_DATE + " = ?";
+        String[] selectionArgs = {sleepDate};
+
+        int rowsDeleted = db.delete(SLEEP_TABLE_NAME, selection, selectionArgs);
+        return rowsDeleted > 0;
+    }
+
 
     public boolean insertData(String username, String password, String email, String bday) {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -65,6 +87,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         cursor.close();
         return exists;
     }
+
     public boolean checkExistingUser(String username) {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.query(TABLE_NAME, null,
@@ -99,9 +122,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         return username;
     }
+
     // Method to retrieve current user details
     public Cursor getUserDetails() {
         SQLiteDatabase db = this.getWritableDatabase();
+
         return db.rawQuery("SELECT * FROM " + TABLE_NAME, null);
     }
 
@@ -115,5 +140,50 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         int rowsAffected = db.update(TABLE_NAME, contentValues, COL_2 + "=?", new String[]{username});
         return rowsAffected > 0;
+    }
+
+    // Method to insert or update sleep hours for a specific date
+    public boolean updateOrInsertSleepHours(String sleepDate, String sleepHours) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        // Check if sleep hours already exist for the given date
+        if (getSleepHours(sleepDate) != null) {
+            // Sleep hours already exist, so update
+            ContentValues contentValues = new ContentValues();
+            contentValues.put(COL_SLEEP_DATE, sleepDate);
+            contentValues.put(COL_SLEEP_HOURS, sleepHours);
+
+            int rowsAffected = db.update(SLEEP_TABLE_NAME, contentValues, COL_SLEEP_DATE + "=?", new String[]{sleepDate});
+            return rowsAffected > 0;
+        } else {
+            // Sleep hours don't exist, so insert
+            ContentValues contentValues = new ContentValues();
+            contentValues.put(COL_SLEEP_DATE, sleepDate);
+            contentValues.put(COL_SLEEP_HOURS, sleepHours);
+
+            long result = db.insert(SLEEP_TABLE_NAME, null, contentValues);
+            return result != -1;
+        }
+    }
+
+    // Method to retrieve sleep hours for a specific date
+    public String getSleepHours(String sleepDate) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String[] columns = {COL_SLEEP_HOURS};
+        String selection = COL_SLEEP_DATE + " = ?";
+        String[] selectionArgs = {sleepDate};
+        Cursor cursor = db.query(SLEEP_TABLE_NAME, columns, selection, selectionArgs, null, null, null);
+        String sleepHours = null;
+
+        if (cursor != null && cursor.moveToFirst()) {
+            int columnIndex = cursor.getColumnIndex(COL_SLEEP_HOURS);
+            if (columnIndex != -1) {
+                sleepHours = cursor.getString(columnIndex);
+            } else {
+                Log.e("DatabaseHelper", "Column COL_SLEEP_HOURS does not exist in the cursor");
+            }
+            cursor.close();
+        }
+        return sleepHours;
     }
 }

@@ -6,4 +6,30 @@
     <string name="edit_profile">Edit Profile</string>
     <string name="log_out">Log Out</string>
     <string name="logout_button_description">Logout Button</string>
+
+    <!-- dashboard strings -->
+
+    <string name="ek_img_content">ExportKit Image</string>
+    <string name="today_string">Today</string>
+    <string name="_76__string">76%</string>
+    <string name="water_string">Water</string>
+    <string name="sleep_string">Sleep</string>
+    <string name="overall_string">Overall</string>
+    <string name="brush_string">Brush</string>
+    <string name="_76__ek1_string">76%</string>
+    <string name="add_goals_string">Add Goals</string>
+    <string name="water_ek1_string">Water</string>
+    <string name="stay_hydrated_string">Stay hydrated</string>
+    <string name="sleep_ek1_string">Sleep</string>
+    <string name="get_enough_rest_string">Get enough rest</string>
+    <string name="brush_ek1_string">Brush</string>
+    <string name="stay_hygienic_string">Stay hygienic</string>
+    <string name="dashboard_ek3_string">DASHBOARD</string>
+
+    <!-- update__sleep strings -->
+
+    <string name="_8_hrs_string">8 hrs</string>
+    <string name="_6_hrs_string">6 hrs</string>
+    <string name="input_hours_of_sleep_string">Input hours of sleep</string>
+    <string name="update_sleep_string">UPDATE SLEEP</string>
 </resources>
