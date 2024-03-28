@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:background="@color/button_background">
+
+	<include
+		android:id="@+id/top_navbar_save"
+		layout="@layout/top_navbar_save"
+		app:layout_constraintTop_toTopOf="parent" />
+
+	<!-- Bottom navigation bar layout -->
+	<include layout="@layout/bottom_navbar"
+		android:id="@+id/bottom_navbar"
+		app:layout_constraintBottom_toBottomOf="parent"/>
+
+	<!-- Content layout -->
+	<RelativeLayout
+		android:id="@+id/content_container"
+		android:layout_width="match_parent"
+		android:layout_height="0dp"
+		app:layout_constraintTop_toBottomOf="@id/top_navbar_save">
+
+		<!-- HorizontalScrollView for additional content -->
+		<HorizontalScrollView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_centerHorizontal="true">
+
+			<RelativeLayout android:id="@+id/page_update__brush0_ek1"
+				android:layout_marginTop="0dp"
+				android:layout_marginStart="0dp"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content">
+
+				<View   android:id="@+id/_bg__update__brush0_ek2"
+					android:background="@drawable/_bg__update__brush0_ek2_shape"
+					android:layout_marginStart="0dp"
+					android:layout_marginTop="0dp"
+					android:layout_width="393dp"
+					android:layout_height="700dp" />
+
+
+				<TextView android:id="@+id/update_brush"
+					android:textStyle="bold"
+					android:layout_gravity="center_horizontal|center"
+					android:gravity="center"
+					android:textSize="15sp"
+					android:textColor="@color/update_brush_color"
+					android:layout_marginLeft="122dp"
+					android:layout_marginTop="21dp"
+					android:layout_width="148dp"
+					android:layout_height="24.5dp"
+					android:text="@string/update_brush_string"
+					/>
+
+				<ImageView android:id="@+id/brush1"
+					android:src="@drawable/_image_27"
+					android:contentDescription="_image_27"
+					android:layout_marginStart="27dp"
+					android:layout_marginTop="85dp"
+					android:layout_width="102dp"
+					android:layout_height="102dp" />
+
+
+				<ImageView android:id="@+id/brush2"
+					android:src="@drawable/_image_28"
+					android:contentDescription="_image_28"
+					android:layout_marginStart="145dp"
+					android:layout_marginTop="85dp"
+					android:layout_width="102dp"
+					android:layout_height="102dp" />
+
+				<ImageView android:id="@+id/brush3"
+					android:src="@drawable/_image_29"
+					android:contentDescription="_image_29"
+					android:layout_marginStart="263dp"
+					android:layout_marginTop="85dp"
+					android:layout_width="102dp"
+					android:layout_height="102dp" />
+
+			</RelativeLayout>
+		</HorizontalScrollView>
+
+	</RelativeLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

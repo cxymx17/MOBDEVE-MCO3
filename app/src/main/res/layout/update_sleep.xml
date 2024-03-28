@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:background="@color/button_background">
+
+	<include
+		android:id="@+id/top_navbar_save"
+		layout="@layout/top_navbar_save"
+		app:layout_constraintTop_toTopOf="parent" />
+
+	<!-- Bottom navigation bar layout -->
+	<include layout="@layout/bottom_navbar"
+		android:id="@+id/bottom_navbar"
+		app:layout_constraintBottom_toBottomOf="parent"/>
+
+
+	<!-- Content layout -->
+	<RelativeLayout
+		android:id="@+id/content_container"
+		android:layout_width="match_parent"
+		android:layout_height="0dp"
+		app:layout_constraintTop_toBottomOf="@id/top_navbar_save">
+
+		<!-- HorizontalScrollView for additional content -->
+		<HorizontalScrollView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_centerHorizontal="true">
+
+			<androidx.constraintlayout.widget.ConstraintLayout
+				android:id="@+id/page_update__sleep_ek1"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content">
+
+				<TextView
+					android:id="@+id/hour_display"
+					android:layout_width="171dp"
+					android:layout_height="60.5dp"
+					android:layout_marginStart="108dp"
+					android:layout_marginTop="432dp"
+					android:gravity="center"
+					android:text="@string/_8_hrs_string"
+					android:textColor="@color/_8_hrs_color"
+					android:textSize="25sp"
+					android:textStyle="bold"
+					app:layout_constraintStart_toStartOf="parent"
+					app:layout_constraintTop_toTopOf="parent" />
+
+				<!--				<View-->
+<!--					android:id="@+id/rectangle_26"-->
+<!--					android:layout_width="94dp"-->
+<!--					android:layout_height="366dp"-->
+<!--					android:layout_marginStart="147dp"-->
+<!--					android:layout_marginTop="57dp"-->
+<!--					android:background="@drawable/rectangle_26_shape"-->
+<!--					app:layout_constraintStart_toStartOf="parent"-->
+<!--					app:layout_constraintTop_toTopOf="parent" />-->
+
+
+
+<!--				<View-->
+<!--					android:id="@+id/rectangle_27"-->
+<!--					android:layout_width="94dp"-->
+<!--					android:layout_height="287dp"-->
+<!--					android:layout_marginStart="147dp"-->
+<!--					android:layout_marginTop="138dp"-->
+<!--					android:background="@drawable/rectangle_27_shape"-->
+<!--					app:layout_constraintStart_toStartOf="parent"-->
+<!--					app:layout_constraintTop_toTopOf="parent" />-->
+
+				<ProgressBar
+					android:id="@+id/vertical_progress_bar"
+					style="?android:attr/progressBarStyleHorizontal"
+					android:layout_width="366dp"
+					android:layout_height="94dp"
+					android:layout_marginStart="12dp"
+					android:layout_marginTop="192dp"
+					android:indeterminate="false"
+					android:max="100"
+					android:progress="0"
+					android:progressDrawable="@drawable/vertical_progress_bar_drawable"
+					android:rotation="-90"
+					app:layout_constraintStart_toStartOf="parent"
+					app:layout_constraintTop_toTopOf="parent" />
+
+				<View
+					android:id="@+id/rectangle_16"
+					android:layout_width="393dp"
+					android:layout_height="46dp"
+					android:layout_marginStart="-1dp"
+					android:layout_marginTop="494dp"
+					android:layout_marginBottom="92dp"
+					android:background="@drawable/rectangle_16_shape"
+					app:layout_constraintBottom_toBottomOf="parent"
+					app:layout_constraintEnd_toEndOf="parent"
+					app:layout_constraintStart_toStartOf="parent"
+					app:layout_constraintTop_toTopOf="parent" />
+
+				<EditText
+					android:id="@+id/input_hours"
+					android:layout_width="58dp"
+					android:layout_height="48dp"
+					android:layout_gravity="center_horizontal|center"
+					android:layout_marginStart="308dp"
+					android:layout_marginTop="492dp"
+					android:layout_marginEnd="27dp"
+					android:layout_marginBottom="92dp"
+					android:autofillHints="6"
+					android:gravity="center"
+					android:hint="6"
+					android:inputType="number"
+					android:textColor="@color/_6_hrs_color"
+					android:textSize="15sp"
+					app:layout_constraintBottom_toBottomOf="parent"
+					app:layout_constraintEnd_toEndOf="parent"
+					app:layout_constraintStart_toStartOf="parent"
+					app:layout_constraintTop_toTopOf="parent" />
+
+
+				<TextView
+					android:id="@+id/input_hours_of_sleep"
+					android:layout_width="179dp"
+					android:layout_height="24.5dp"
+					android:layout_gravity="center_horizontal|center"
+					android:layout_marginLeft="18dp"
+					android:layout_marginTop="507dp"
+					android:gravity="center"
+					android:text="@string/input_hours_of_sleep_string"
+					android:textColor="@color/_6_hrs_color"
+					android:textSize="15sp"
+					app:layout_constraintStart_toStartOf="parent"
+					app:layout_constraintTop_toTopOf="parent" />
+
+				<TextView
+					android:id="@+id/update_sleep"
+					android:layout_width="140dp"
+					android:layout_height="24.5dp"
+					android:layout_gravity="center_horizontal|center"
+					android:layout_marginLeft="127dp"
+					android:layout_marginTop="15dp"
+					android:gravity="center"
+					android:text="@string/update_sleep_string"
+					android:textColor="@color/_8_hrs_color"
+					android:textSize="15sp"
+					android:textStyle="bold"
+					app:layout_constraintStart_toStartOf="parent"
+					app:layout_constraintTop_toTopOf="parent" />
+
+			</androidx.constraintlayout.widget.ConstraintLayout>
+		</HorizontalScrollView>
+	</RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
