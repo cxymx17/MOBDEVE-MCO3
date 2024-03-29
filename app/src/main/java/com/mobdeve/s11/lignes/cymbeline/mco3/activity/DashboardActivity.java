@@ -1,12 +1,12 @@
 package com.mobdeve.s11.lignes.cymbeline.mco3.activity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.content.SharedPreferences;
-import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -20,6 +20,7 @@ import java.util.Locale;
 
 public class DashboardActivity extends AppCompatActivity {
     private ProgressBar progressBar;
+    private ProgressBar progressBar4; // Add progressBar3
     private DatabaseHelper databaseHelper;
 
     @Override
@@ -35,11 +36,12 @@ public class DashboardActivity extends AppCompatActivity {
         // Initialize database helper
         databaseHelper = new DatabaseHelper(this);
 
-        // Find the progress bar
+        // Find the progress bars
         progressBar = findViewById(R.id.progressBar2);
+        progressBar4 = findViewById(R.id.progressBar4); // Initialize progressBar3
 
-        // Update the progress bar
-        updateProgressBar();
+        // Update the progress bars
+        updateProgressBars();
 
         // Find the rectangle_11 view
         View rectangle11 = findViewById(R.id.rectangle_11);
@@ -71,8 +73,17 @@ public class DashboardActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        // Update the progress bar when the activity is resumed
+        // Update the progress bars when the activity is resumed
+        updateProgressBars();
+    }
+
+    // Method to update the progress bars based on saved sleep hours and brush count
+    private void updateProgressBars() {
+        // Update progress bar for sleep hours
         updateProgressBar();
+
+        // Update progress bar for brush count
+        updateBrushProgressBar();
     }
 
     // Method to update the progress bar based on saved sleep hours
@@ -107,6 +118,37 @@ public class DashboardActivity extends AppCompatActivity {
 
         // Set the rotation to start from the top
         progressBar.setRotation(-90);
+    }
+
+    // Method to update the progress bar based on saved brush count
+    // Method to update the progress bar based on saved brush count
+    private void updateBrushProgressBar() {
+        // Get the current date
+        Calendar calendar = Calendar.getInstance();
+        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy", Locale.getDefault());
+        String currentDate = sdf.format(calendar.getTime());
+
+        // Retrieve brush count for the current date from the database
+        SharedPreferences sharedPreferences = getSharedPreferences("user_session", MODE_PRIVATE);
+        String loggedInUsername = sharedPreferences.getString("username", "");
+        int brushCount = databaseHelper.getBrushCount(loggedInUsername, currentDate);
+
+        // Calculate the progress based on retrieved brush count
+        int progress = (int) (((double) brushCount / 3.0) * 100);
+        // Assuming maximum of 3 brushes
+
+        // Set the progress of progressBar3
+        progressBar4.setProgress(progress);
+
+        // Set the text for the brush progress bar
+        progressBar4.setIndeterminate(false);
+        progressBar4.setMax(100);
+        progressBar4.setProgress(progress);
+
+        // Set the rotation to start from the top
+        progressBar4.setRotation(-90);
+        Log.d("DashboardActivity", "Brush count for " + currentDate + ": " + brushCount);
+
     }
 
 }

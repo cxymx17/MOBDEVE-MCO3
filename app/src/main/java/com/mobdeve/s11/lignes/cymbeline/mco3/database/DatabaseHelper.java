@@ -62,6 +62,33 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return rowsDeleted > 0;
     }
 
+
+
+    // Method to insert or update brush count for a specific date
+    // Method to insert or update brush count for a specific date
+    // Method to insert or update brush count for a specific date
+    public boolean updateOrInsertBrushCount(String username, String brushDate, int brushCount) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        // First, delete the existing brush count for the specified date and username
+        deleteBrushCount(username, brushDate);
+
+        // Then, insert the new brush count
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(COL_2, username);
+        contentValues.put(COL_BRUSH_DATE, brushDate);
+        contentValues.put(COL_BRUSH_COUNT, brushCount);
+        long result = db.insert(BRUSH_TABLE_NAME, null, contentValues);
+
+        if (result != -1) {
+            Log.d("DatabaseHelper", "Brush count updated successfully for date: " + brushDate + ", username: " + username);
+            return true;
+        } else {
+            Log.e("DatabaseHelper", "Failed to update brush count for date: " + brushDate + ", username: " + username);
+            return false;
+        }
+    }
+
     // Method to delete brush count for a specific date
     public boolean deleteBrushCount(String username, String brushDate) {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -71,16 +98,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return rowsDeleted > 0;
     }
 
-    // Method to insert or update brush count for a specific date
-    public boolean updateOrInsertBrushCount(String username, String brushDate, int brushCount) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues contentValues = new ContentValues();
-        contentValues.put(COL_2, username);
-        contentValues.put(COL_BRUSH_DATE, brushDate);
-        contentValues.put(COL_BRUSH_COUNT, brushCount);
-        long result = db.insertWithOnConflict(BRUSH_TABLE_NAME, null, contentValues, SQLiteDatabase.CONFLICT_REPLACE);
-        return result != -1;
-    }
 
     // Method to retrieve brush count for a specific date
     public int getBrushCount(String username, String brushDate) {
@@ -92,14 +109,21 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             if (cursor != null && cursor.moveToFirst()) {
                 int columnIndex = cursor.getColumnIndex(COL_BRUSH_COUNT);
                 if (columnIndex != -1) {
-                    return cursor.getInt(columnIndex);
+                    int brushCount = cursor.getInt(columnIndex);
+                    Log.d("DatabaseHelper", "Retrieved brush count: " + brushCount + " for brushDate: " + brushDate + ", username: " + username);
+                    return brushCount;
                 } else {
                     Log.e("DatabaseHelper", "Column COL_BRUSH_COUNT does not exist in the cursor");
                 }
+            } else {
+                Log.d("DatabaseHelper", "No brush count found for brushDate: " + brushDate + ", username: " + username);
             }
+        } catch (Exception e) {
+            Log.e("DatabaseHelper", "Error retrieving brush count: " + e.getMessage());
         }
         return -1;
     }
+
 
     public boolean insertData(String username, String password, String email, String bday) {
         SQLiteDatabase db = this.getWritableDatabase();

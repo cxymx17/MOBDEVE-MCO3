@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -14,7 +15,10 @@ import com.mobdeve.s11.lignes.cymbeline.mco3.database.DatabaseHelper;
 import com.mobdeve.s11.lignes.cymbeline.mco3.navbar.BottomNavbarHelper;
 
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 public class UpdateBrushActivity extends AppCompatActivity {
 
@@ -45,6 +49,9 @@ public class UpdateBrushActivity extends AppCompatActivity {
 
         // Load the state of brushes from SharedPreferences
         loadBrushState();
+
+        // Retrieve the latest brush count from the database and log it
+        retrieveAndLogLatestBrushCount();
 
         // Set OnClickListener for brush1
         brush1.setOnClickListener(new View.OnClickListener() {
@@ -79,6 +86,24 @@ public class UpdateBrushActivity extends AppCompatActivity {
         });
     }
 
+
+    private void retrieveAndLogLatestBrushCount() {
+        // Get the current date
+        Calendar calendar = Calendar.getInstance();
+        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy", Locale.getDefault());
+        String currentDate = sdf.format(calendar.getTime());
+
+        // Get the current logged-in username
+        SharedPreferences sharedPreferences = getSharedPreferences("user_session", MODE_PRIVATE);
+        String loggedInUsername = sharedPreferences.getString("username", "");
+
+        // Retrieve the latest brush count from the database
+        int latestBrushCount = databaseHelper.getBrushCount(loggedInUsername, currentDate);
+
+        // Log the latest retrieved brush count
+        Log.d("UpdateBrushActivity", "Latest retrieved brush count from database: " + latestBrushCount);
+    }
+
     private void toggleBrush(int index, ImageView brush) {
         if (brushFilled[index]) {
             brush.setImageResource(R.drawable.original_brush);
@@ -92,32 +117,31 @@ public class UpdateBrushActivity extends AppCompatActivity {
     }
 
     private void incrementBrushCount() {
-        brushCount = 0; // Reset brush count to 0 before recalculating
-        for (boolean filled : brushFilled) {
-            if (filled) {
-                brushCount++;
-            }
-        }
-        Toast.makeText(UpdateBrushActivity.this, "Brush Count: " + brushCount, Toast.LENGTH_SHORT).show();
+        brushCount++;
+        displayBrushCount();
     }
 
     private void decrementBrushCount() {
-        brushCount = 0; // Reset brush count to 0 before recalculating
-        for (boolean filled : brushFilled) {
-            if (filled) {
-                brushCount++;
-            }
-        }
+        brushCount--;
+        displayBrushCount();
+    }
+
+    private void displayBrushCount() {
         Toast.makeText(UpdateBrushActivity.this, "Brush Count: " + brushCount, Toast.LENGTH_SHORT).show();
     }
 
     private void saveBrushCount() {
         // Get the current date
-        String currentDate = getCurrentDate();
+        Calendar calendar = Calendar.getInstance();
+        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy", Locale.getDefault());
+        String currentDate = sdf.format(calendar.getTime());
 
         // Get the current logged-in username
         SharedPreferences sharedPreferences = getSharedPreferences("user_session", MODE_PRIVATE);
         String loggedInUsername = sharedPreferences.getString("username", "");
+
+        // Log the brush count before saving
+        Log.d("UpdateBrushActivity", "Brush count to be saved: " + brushCount);
 
         // Save brush count to the database
         boolean success = databaseHelper.updateOrInsertBrushCount(loggedInUsername, currentDate, brushCount);
@@ -131,14 +155,23 @@ public class UpdateBrushActivity extends AppCompatActivity {
                 editor.putBoolean(loggedInUsername + "_brush" + i, brushFilled[i]);
             }
             editor.apply();
+
+            // Log the saved brush count
+            int savedBrushCount = databaseHelper.getBrushCount(loggedInUsername, currentDate);
+            Log.d("UpdateBrushActivity", "Saved brush count in database: " + savedBrushCount);
         } else {
             Toast.makeText(this, "Failed to save brush count", Toast.LENGTH_SHORT).show();
         }
     }
 
+
     private void loadBrushState() {
         SharedPreferences sharedPreferences = getSharedPreferences("user_session", MODE_PRIVATE);
+        Calendar calendar = Calendar.getInstance();
+        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy", Locale.getDefault());
         String loggedInUsername = sharedPreferences.getString("username", "");
+        String currentDate = sdf.format(calendar.getTime());
+
         brushCount = sharedPreferences.getInt(loggedInUsername + "_brushCount", 0);
         for (int i = 0; i < brushFilled.length; i++) {
             brushFilled[i] = sharedPreferences.getBoolean(loggedInUsername + "_brush" + i, false);
@@ -163,8 +196,4 @@ public class UpdateBrushActivity extends AppCompatActivity {
     }
 
 
-    private String getCurrentDate() {
-        // Get the current date
-        return DateFormat.getDateInstance().format(new Date());
-    }
 }
