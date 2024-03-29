@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.content.SharedPreferences;
+import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -81,16 +83,24 @@ public class DashboardActivity extends AppCompatActivity {
         String currentDate = sdf.format(calendar.getTime());
 
         // Retrieve sleep hours for the current date from the database
-        String sleepHours = databaseHelper.getSleepHours(currentDate);
+        SharedPreferences sharedPreferences = getSharedPreferences("user_session", MODE_PRIVATE);
+        String loggedInUsername = sharedPreferences.getString("username", "");
+        String sleepHours = databaseHelper.getSleepHours(currentDate, loggedInUsername);
+
+        // Log retrieved sleep hours for debugging
+        Log.d("DashboardActivity", "Sleep hours for " + currentDate + ": " + sleepHours);
 
         // Calculate the progress based on retrieved sleep hours
         int progress = 0;
         if (sleepHours != null) {
-            // Calculate progress based on sleep hours (e.g., assuming 8 hours of sleep is maximum)
+            // Calculate progress based on sleep hours (e.g., assuming 7 hours of sleep is maximum)
             int totalSleepHours = Integer.parseInt(sleepHours);
-            int maxSleepHours = 8; // Maximum hours of sleep
+            int maxSleepHours = 7; // Maximum hours of sleep
             progress = (int) ((totalSleepHours / (float) maxSleepHours) * 100);
         }
+
+        // Log progress for debugging
+        Log.d("DashboardActivity", "Progress: " + progress);
 
         // Set the progress of the progress bar
         progressBar.setProgress(progress);
@@ -98,4 +108,5 @@ public class DashboardActivity extends AppCompatActivity {
         // Set the rotation to start from the top
         progressBar.setRotation(-90);
     }
+
 }

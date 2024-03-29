@@ -7,17 +7,16 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.Locale;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "UserInfo.db";
+    private static final int DATABASE_VERSION = 1;
     private static final String TABLE_NAME = "user_table";
     private static final String SLEEP_TABLE_NAME = "sleep_table";
     private static final String BRUSH_TABLE_NAME = "brush_table";
+    public static final String COL_1 = "ID"; // Added ID column
     public static final String COL_2 = "USERNAME";
     public static final String COL_3 = "PASSWORD";
     public static final String COL_4 = "EMAIL";
@@ -28,19 +27,22 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String COL_BRUSH_COUNT = "BRUSH_COUNT";
 
     public DatabaseHelper(Context context) {
-        super(context, DATABASE_NAME, null, 1);
+        super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
         // Create user_table
-        db.execSQL("CREATE TABLE " + TABLE_NAME + " (ID INTEGER PRIMARY KEY AUTOINCREMENT, " + COL_2 + " TEXT, " + COL_3 + " TEXT, " + COL_4 + " TEXT, " + COL_5 + " TEXT)");
+        String createUserTableQuery = "CREATE TABLE " + TABLE_NAME + " (" + COL_1 + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COL_2 + " TEXT, " + COL_3 + " TEXT, " + COL_4 + " TEXT, " + COL_5 + " TEXT)";
+        db.execSQL(createUserTableQuery);
 
         // Create sleep_table
-        db.execSQL("CREATE TABLE " + SLEEP_TABLE_NAME + " (ID INTEGER PRIMARY KEY AUTOINCREMENT, " + COL_SLEEP_DATE + " TEXT, " + COL_SLEEP_HOURS + " TEXT)");
+        String createSleepTableQuery = "CREATE TABLE " + SLEEP_TABLE_NAME + " (" + COL_1 + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COL_2 + " TEXT, " + COL_SLEEP_DATE + " TEXT, " + COL_SLEEP_HOURS + " TEXT)";
+        db.execSQL(createSleepTableQuery);
 
         // Create brush_table
-        db.execSQL("CREATE TABLE " + BRUSH_TABLE_NAME + " (ID INTEGER PRIMARY KEY AUTOINCREMENT, " + COL_BRUSH_DATE + " TEXT, " + COL_BRUSH_COUNT + " INTEGER)");
+        String createBrushTableQuery = "CREATE TABLE " + BRUSH_TABLE_NAME + " (" + COL_1 + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COL_2 + " TEXT, " + COL_BRUSH_DATE + " TEXT, " + COL_BRUSH_COUNT + " INTEGER)";
+        db.execSQL(createBrushTableQuery);
     }
 
     @Override
@@ -52,66 +54,52 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     // Method to delete sleep hours for a specific date
-    public boolean deleteSleepHours(String sleepDate) {
+    public boolean deleteSleepHours(String username, String sleepDate) {
         SQLiteDatabase db = this.getWritableDatabase();
-        String selection = COL_SLEEP_DATE + " = ?";
-        String[] selectionArgs = {sleepDate};
-
+        String selection = COL_2 + " = ? AND " + COL_SLEEP_DATE + " = ?";
+        String[] selectionArgs = {username, sleepDate};
         int rowsDeleted = db.delete(SLEEP_TABLE_NAME, selection, selectionArgs);
         return rowsDeleted > 0;
     }
 
     // Method to delete brush count for a specific date
-    public boolean deleteBrushCount(String brushDate) {
+    public boolean deleteBrushCount(String username, String brushDate) {
         SQLiteDatabase db = this.getWritableDatabase();
-        String selection = COL_BRUSH_DATE + " = ?";
-        String[] selectionArgs = {brushDate};
-
+        String selection = COL_2 + " = ? AND " + COL_BRUSH_DATE + " = ?";
+        String[] selectionArgs = {username, brushDate};
         int rowsDeleted = db.delete(BRUSH_TABLE_NAME, selection, selectionArgs);
         return rowsDeleted > 0;
     }
 
     // Method to insert or update brush count for a specific date
-    public boolean updateOrInsertBrushCount(String brushDate, int brushCount) {
+    public boolean updateOrInsertBrushCount(String username, String brushDate, int brushCount) {
         SQLiteDatabase db = this.getWritableDatabase();
-
         ContentValues contentValues = new ContentValues();
+        contentValues.put(COL_2, username);
         contentValues.put(COL_BRUSH_DATE, brushDate);
         contentValues.put(COL_BRUSH_COUNT, brushCount);
-
-        // Check if brush count already exists for the given date
-        if (getBrushCount(brushDate) != -1) {
-            // Brush count already exists, so update
-            int rowsAffected = db.update(BRUSH_TABLE_NAME, contentValues, COL_BRUSH_DATE + "=?", new String[]{brushDate});
-            return rowsAffected > 0;
-        } else {
-            // Brush count doesn't exist, so insert
-            long result = db.insert(BRUSH_TABLE_NAME, null, contentValues);
-            return result != -1;
-        }
+        long result = db.insertWithOnConflict(BRUSH_TABLE_NAME, null, contentValues, SQLiteDatabase.CONFLICT_REPLACE);
+        return result != -1;
     }
 
     // Method to retrieve brush count for a specific date
-    public int getBrushCount(String brushDate) {
+    public int getBrushCount(String username, String brushDate) {
         SQLiteDatabase db = this.getReadableDatabase();
         String[] columns = {COL_BRUSH_COUNT};
-        String selection = COL_BRUSH_DATE + " = ?";
-        String[] selectionArgs = {brushDate};
-        Cursor cursor = db.query(BRUSH_TABLE_NAME, columns, selection, selectionArgs, null, null, null);
-        int brushCount = -1; // Default value if brush count not found
-
-        if (cursor != null && cursor.moveToFirst()) {
-            int columnIndex = cursor.getColumnIndex(COL_BRUSH_COUNT);
-            if (columnIndex != -1) {
-                brushCount = cursor.getInt(columnIndex);
-            } else {
-                Log.e("DatabaseHelper", "Column COL_BRUSH_COUNT does not exist in the cursor");
+        String selection = COL_2 + " = ? AND " + COL_BRUSH_DATE + " = ?";
+        String[] selectionArgs = {username, brushDate};
+        try (Cursor cursor = db.query(BRUSH_TABLE_NAME, columns, selection, selectionArgs, null, null, null)) {
+            if (cursor != null && cursor.moveToFirst()) {
+                int columnIndex = cursor.getColumnIndex(COL_BRUSH_COUNT);
+                if (columnIndex != -1) {
+                    return cursor.getInt(columnIndex);
+                } else {
+                    Log.e("DatabaseHelper", "Column COL_BRUSH_COUNT does not exist in the cursor");
+                }
             }
-            cursor.close();
         }
-        return brushCount;
+        return -1;
     }
-
 
     public boolean insertData(String username, String password, String email, String bday) {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -119,45 +107,34 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         contentValues.put(COL_2, username);
         contentValues.put(COL_3, password);
         contentValues.put(COL_4, email);
-
-        // Validate and format birthday
-        String formattedBday = validateAndFormatBday(bday);
-        contentValues.put(COL_5, formattedBday);
-
+        contentValues.put(COL_5, bday);
         long result = db.insert(TABLE_NAME, null, contentValues);
         return result != -1;
     }
 
-    private String validateAndFormatBday(String bday) {
-        // Regular expression for mm/dd/yyyy format
-        String regex = "^(0[1-9]|1[0-2])/(0[1-9]|[12][0-9]|3[01])/(19|20)\\d\\d$";
-
-        // Check if the birthday matches the expected format
-        if (bday.matches(regex)) {
-            return bday;
-        } else {
-            throw new IllegalArgumentException("Birthday must be in the format mm/dd/yyyy");
+    private boolean isValidDateFormat(String dateStr) {
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy", Locale.getDefault());
+            sdf.setLenient(false);
+            sdf.parse(dateStr);
+            return true;
+        } catch (Exception e) {
+            return false;
         }
     }
 
     public boolean checkUser(String username, String password) {
         SQLiteDatabase db = this.getWritableDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_NAME + " WHERE " + COL_2 + " = ? AND " + COL_3 + " = ?", new String[]{username, password});
-        boolean exists = cursor.getCount() > 0;
-        cursor.close();
-        return exists;
+        try (Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_NAME + " WHERE " + COL_2 + " = ? AND " + COL_3 + " = ?", new String[]{username, password})) {
+            return cursor.getCount() > 0;
+        }
     }
 
     public boolean checkExistingUser(String username) {
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.query(TABLE_NAME, null,
-                COL_2 + " = ?",
-                new String[]{username}, null, null, null);
-        boolean exists = cursor != null && cursor.getCount() > 0;
-        if (cursor != null) {
-            cursor.close();
+        try (Cursor cursor = db.query(TABLE_NAME, null, COL_2 + " = ?", new String[]{username}, null, null, null)) {
+            return cursor != null && cursor.getCount() > 0;
         }
-        return exists;
     }
 
     public String getUserName(String loggedInUsername) {
@@ -165,30 +142,27 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         String[] columns = {COL_2};
         String selection = COL_2 + " = ?";
         String[] selectionArgs = {loggedInUsername};
-        Cursor cursor = db.query(TABLE_NAME, columns, selection, selectionArgs, null, null,
-                null);
-        String username = "";
-
-        if (cursor != null && cursor.moveToFirst()) {
-            int columnIndex = cursor.getColumnIndex(COL_2);
-            if (columnIndex != -1) {
-                username = cursor.getString(columnIndex);
+        try (Cursor cursor = db.query(TABLE_NAME, columns, selection, selectionArgs, null, null, null)) {
+            if (cursor != null && cursor.moveToFirst()) {
+                int columnIndex = cursor.getColumnIndex(COL_2);
+                if (columnIndex != -1) {
+                    return cursor.getString(columnIndex);
+                } else {                    Log.e("DatabaseHelper", "Column COL_2 does not exist in the cursor");
+                }
             } else {
-                Log.e("DatabaseHelper", "Column COL_2 does not exist in the cursor");
+                Log.e("DatabaseHelper", "Cursor is null or empty");
             }
-            cursor.close();
-        } else {
-            Log.e("DatabaseHelper", "Cursor is null or empty");
         }
-
-        return username;
+        return "";
     }
 
     // Method to retrieve current user details
-    public Cursor getUserDetails() {
+    public Cursor getUserDetails(String username) {
         SQLiteDatabase db = this.getWritableDatabase();
-
-        return db.rawQuery("SELECT * FROM " + TABLE_NAME, null);
+        String[] columns = {COL_2, COL_3, COL_4, COL_5};
+        String selection = COL_2 + " = ?";
+        String[] selectionArgs = {username};
+        return db.query(TABLE_NAME, columns, selection, selectionArgs, null, null, null);
     }
 
     // Method to update user details
@@ -198,53 +172,62 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         contentValues.put(COL_3, password);
         contentValues.put(COL_4, email);
         contentValues.put(COL_5, bday);
-
         int rowsAffected = db.update(TABLE_NAME, contentValues, COL_2 + "=?", new String[]{username});
         return rowsAffected > 0;
     }
 
     // Method to insert or update sleep hours for a specific date
-    public boolean updateOrInsertSleepHours(String sleepDate, String sleepHours) {
+    // Method to insert or update sleep hours for a specific date
+    public boolean updateOrInsertSleepHours(String username, String sleepDate, String sleepHours) {
         SQLiteDatabase db = this.getWritableDatabase();
 
-        // Check if sleep hours already exist for the given date
-        if (getSleepHours(sleepDate) != null) {
-            // Sleep hours already exist, so update
-            ContentValues contentValues = new ContentValues();
-            contentValues.put(COL_SLEEP_DATE, sleepDate);
-            contentValues.put(COL_SLEEP_HOURS, sleepHours);
+        // First, delete the existing sleep hours for the specified date and username
+        deleteSleepHours(username, sleepDate);
 
-            int rowsAffected = db.update(SLEEP_TABLE_NAME, contentValues, COL_SLEEP_DATE + "=?", new String[]{sleepDate});
-            return rowsAffected > 0;
+        // Then, insert the new sleep hours
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(COL_2, username);
+        contentValues.put(COL_SLEEP_DATE, sleepDate);
+        contentValues.put(COL_SLEEP_HOURS, sleepHours);
+        long result = db.insert(SLEEP_TABLE_NAME, null, contentValues);
+
+        if (result != -1) {
+            Log.d("DatabaseHelper", "Sleep hours updated successfully for date: " + sleepDate + ", username: " + username);
+            return true;
         } else {
-            // Sleep hours don't exist, so insert
-            ContentValues contentValues = new ContentValues();
-            contentValues.put(COL_SLEEP_DATE, sleepDate);
-            contentValues.put(COL_SLEEP_HOURS, sleepHours);
-
-            long result = db.insert(SLEEP_TABLE_NAME, null, contentValues);
-            return result != -1;
+            Log.e("DatabaseHelper", "Failed to update sleep hours for date: " + sleepDate + ", username: " + username);
+            return false;
         }
     }
+
+
 
     // Method to retrieve sleep hours for a specific date
-    public String getSleepHours(String sleepDate) {
+    // Modify the getSleepHours method to accept only the sleep date
+    public String getSleepHours(String sleepDate, String username) {
         SQLiteDatabase db = this.getReadableDatabase();
         String[] columns = {COL_SLEEP_HOURS};
-        String selection = COL_SLEEP_DATE + " = ?";
-        String[] selectionArgs = {sleepDate};
-        Cursor cursor = db.query(SLEEP_TABLE_NAME, columns, selection, selectionArgs, null, null, null);
-        String sleepHours = null;
-
-        if (cursor != null && cursor.moveToFirst()) {
-            int columnIndex = cursor.getColumnIndex(COL_SLEEP_HOURS);
-            if (columnIndex != -1) {
-                sleepHours = cursor.getString(columnIndex);
+        String selection = COL_SLEEP_DATE + " = ? AND " + COL_2 + " = ?";
+        String[] selectionArgs = {sleepDate, username};
+        try (Cursor cursor = db.query(SLEEP_TABLE_NAME, columns, selection, selectionArgs, null, null, null)) {
+            if (cursor != null && cursor.moveToFirst()) {
+                int columnIndex = cursor.getColumnIndex(COL_SLEEP_HOURS);
+                if (columnIndex != -1) {
+                    String sleepHours = cursor.getString(columnIndex);
+                    Log.d("DatabaseHelper", "Retrieved sleep hours: " + sleepHours);
+                    return sleepHours;
+                } else {
+                    Log.e("DatabaseHelper", "Column COL_SLEEP_HOURS does not exist in the cursor");
+                }
             } else {
-                Log.e("DatabaseHelper", "Column COL_SLEEP_HOURS does not exist in the cursor");
+                Log.d("DatabaseHelper", "No sleep hours found for date: " + sleepDate + ", username: " + username);
             }
-            cursor.close();
+        } catch (Exception e) {
+            Log.e("DatabaseHelper", "Error retrieving sleep hours: " + e.getMessage());
         }
-        return sleepHours;
+        return null;
     }
+
+
 }
+
