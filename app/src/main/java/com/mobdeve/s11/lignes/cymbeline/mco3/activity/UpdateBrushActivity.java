@@ -28,6 +28,7 @@ public class UpdateBrushActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.update_brush);
         BottomNavbarHelper.setProfileIconClickListener(this);
+
         // Set the text for the top navigation bar
         TextView textView = findViewById(R.id.textView);
         textView.setText("BRUSH");
@@ -91,17 +92,21 @@ public class UpdateBrushActivity extends AppCompatActivity {
     }
 
     private void incrementBrushCount() {
-        brushCount++;
-        if (brushCount > 3) {
-            brushCount = 3;
+        brushCount = 0; // Reset brush count to 0 before recalculating
+        for (boolean filled : brushFilled) {
+            if (filled) {
+                brushCount++;
+            }
         }
         Toast.makeText(UpdateBrushActivity.this, "Brush Count: " + brushCount, Toast.LENGTH_SHORT).show();
     }
 
     private void decrementBrushCount() {
-        brushCount--;
-        if (brushCount < 0) {
-            brushCount = 0;
+        brushCount = 0; // Reset brush count to 0 before recalculating
+        for (boolean filled : brushFilled) {
+            if (filled) {
+                brushCount++;
+            }
         }
         Toast.makeText(UpdateBrushActivity.this, "Brush Count: " + brushCount, Toast.LENGTH_SHORT).show();
     }
@@ -110,16 +115,20 @@ public class UpdateBrushActivity extends AppCompatActivity {
         // Get the current date
         String currentDate = getCurrentDate();
 
+        // Get the current logged-in username
+        SharedPreferences sharedPreferences = getSharedPreferences("user_session", MODE_PRIVATE);
+        String loggedInUsername = sharedPreferences.getString("username", "");
+
         // Save brush count to the database
-        boolean success = databaseHelper.updateOrInsertBrushCount(currentDate, brushCount);
+        boolean success = databaseHelper.updateOrInsertBrushCount(loggedInUsername, currentDate, brushCount);
 
         if (success) {
             Toast.makeText(this, "Brush count saved successfully", Toast.LENGTH_SHORT).show();
             // Save brush state to SharedPreferences when the save button is clicked
             SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.putInt("brushCount", brushCount);
+            editor.putInt(loggedInUsername + "_brushCount", brushCount);
             for (int i = 0; i < brushFilled.length; i++) {
-                editor.putBoolean("brush" + i, brushFilled[i]);
+                editor.putBoolean(loggedInUsername + "_brush" + i, brushFilled[i]);
             }
             editor.apply();
         } else {
@@ -128,9 +137,11 @@ public class UpdateBrushActivity extends AppCompatActivity {
     }
 
     private void loadBrushState() {
-        brushCount = sharedPreferences.getInt("brushCount", 0);
+        SharedPreferences sharedPreferences = getSharedPreferences("user_session", MODE_PRIVATE);
+        String loggedInUsername = sharedPreferences.getString("username", "");
+        brushCount = sharedPreferences.getInt(loggedInUsername + "_brushCount", 0);
         for (int i = 0; i < brushFilled.length; i++) {
-            brushFilled[i] = sharedPreferences.getBoolean("brush" + i, false);
+            brushFilled[i] = sharedPreferences.getBoolean(loggedInUsername + "_brush" + i, false);
             ImageView brush = null;
             switch (i) {
                 case 0:
@@ -150,6 +161,7 @@ public class UpdateBrushActivity extends AppCompatActivity {
             }
         }
     }
+
 
     private String getCurrentDate() {
         // Get the current date
