@@ -1,5 +1,6 @@
 package com.mobdeve.s11.lignes.cymbeline.mco3.activity;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
@@ -13,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.mobdeve.s11.lignes.cymbeline.mco3.R;
 import com.mobdeve.s11.lignes.cymbeline.mco3.database.DatabaseHelper;
 import com.mobdeve.s11.lignes.cymbeline.mco3.navbar.BottomNavbarHelper;
+import com.mobdeve.s11.lignes.cymbeline.mco3.navbar.TopNavBarHelper;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -30,6 +32,7 @@ public class UpdateSleepActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.update_sleep);
         BottomNavbarHelper.setProfileIconClickListener(this);
+        TopNavBarHelper.setCancelClickListener(this);
 
         // Set the text for the top navigation bar
         TextView textView = findViewById(R.id.textView);
@@ -119,6 +122,9 @@ public class UpdateSleepActivity extends AppCompatActivity {
 
             // Reload the data to display the newly saved sleep hours
             loadSleepHours();
+            Intent intent = new Intent(UpdateSleepActivity.this, DashboardActivity.class);
+            startActivity(intent);
+            finish();
         } else {
             Toast.makeText(this, "Failed to save sleep hours", Toast.LENGTH_SHORT).show();
         }

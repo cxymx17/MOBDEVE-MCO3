@@ -43,4 +43,12 @@
 
     <color name="_bg__update__brush0_ek2_color">#C3EAFF</color>
     <color name="update_brush_color">#005A8C</color>
+
+    <!-- update__water colors -->
+
+    <color name="_bg__update__water_ek2_color">#C3EAFF</color>
+    <color name="update_water_color">#005A8C</color>
+    <color name="rectangle_23_color">#035F92</color>
+    <color name="add_glass_color">#FFFFFF</color>
+    <color name="rectangle_25_color">#64B5F6</color>
 </resources>

@@ -235,7 +235,7 @@
 					android:layout_height="77dp" />
 
 
-				<TextView android:id="@+id/_76_"
+				<TextView android:id="@+id/overallPercent"
 					android:textStyle="bold"
 					android:layout_gravity="center_horizontal|center"
 					android:gravity="center"

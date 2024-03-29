@@ -20,6 +20,8 @@ import java.util.Locale;
 
 public class DashboardActivity extends AppCompatActivity {
     private ProgressBar progressBar;
+
+    private ProgressBar progressBar3;
     private ProgressBar progressBar4; // Add progressBar3
     private DatabaseHelper databaseHelper;
 
@@ -38,7 +40,9 @@ public class DashboardActivity extends AppCompatActivity {
 
         // Find the progress bars
         progressBar = findViewById(R.id.progressBar2);
+        progressBar3 = findViewById(R.id.progressBar3);
         progressBar4 = findViewById(R.id.progressBar4); // Initialize progressBar3
+
 
         // Update the progress bars
         updateProgressBars();
@@ -52,6 +56,19 @@ public class DashboardActivity extends AppCompatActivity {
             public void onClick(View v) {
                 // Navigate to update_sleep.xml page
                 Intent intent = new Intent(DashboardActivity.this, UpdateSleepActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        // Find the rectangle_13 view
+        View rectangle13 = findViewById(R.id.rectangle_13);
+
+        // Set OnClickListener to rectangle_13
+        rectangle13.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Navigate to update_water.xml page
+                Intent intent = new Intent(DashboardActivity.this, UpdateWaterActivity.class);
                 startActivity(intent);
             }
         });
@@ -77,13 +94,15 @@ public class DashboardActivity extends AppCompatActivity {
         updateProgressBars();
     }
 
-    // Method to update the progress bars based on saved sleep hours and brush count
+    // Call this method whenever you update the progress bars
     private void updateProgressBars() {
-        // Update progress bar for sleep hours
+        // Update progress bars for sleep hours, brush count, and water intake
         updateProgressBar();
-
-        // Update progress bar for brush count
         updateBrushProgressBar();
+        updateWaterProgressBar();
+
+        // Update the overall progress percentage
+        updateOverallProgress();
     }
 
     // Method to update the progress bar based on saved sleep hours
@@ -150,5 +169,45 @@ public class DashboardActivity extends AppCompatActivity {
         Log.d("DashboardActivity", "Brush count for " + currentDate + ": " + brushCount);
 
     }
+
+    // Method to update the progress bar based on saved water intake
+    private void updateWaterProgressBar() {
+        // Get the current date
+        Calendar calendar = Calendar.getInstance();
+        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy", Locale.getDefault());
+        String currentDate = sdf.format(calendar.getTime());
+
+        // Retrieve water intake for the current date from the database
+        SharedPreferences sharedPreferences = getSharedPreferences("user_session", MODE_PRIVATE);
+        String loggedInUsername = sharedPreferences.getString("username", "");
+        int waterIntake = databaseHelper.getWaterIntake(currentDate, loggedInUsername);
+
+        // Calculate the progress based on retrieved water intake
+        int progress = (int) (((double) waterIntake / 2000.0) * 100);
+        // Assuming maximum of 2000 ml intake
+
+        // Set the progress of progressBar3
+        progressBar3.setProgress(progress);
+
+        // Set the text for the water progress bar
+        progressBar3.setIndeterminate(false);
+        progressBar3.setMax(100);
+        progressBar3.setProgress(progress);
+
+        // Set the rotation to start from the top
+        progressBar3.setRotation(-90);
+
+    }
+
+    // Method to update the overall progress percentage
+    private void updateOverallProgress() {
+        // Calculate the overall progress based on the progress of sleep hours, brush count, and water intake
+        int overallProgress = (progressBar.getProgress() + progressBar4.getProgress() + progressBar3.getProgress()) / 3;
+
+        // Set the text of the overall progress TextView
+        TextView overallPercent = findViewById(R.id.overallPercent);
+        overallPercent.setText(overallProgress + "%");
+    }
+
 
 }

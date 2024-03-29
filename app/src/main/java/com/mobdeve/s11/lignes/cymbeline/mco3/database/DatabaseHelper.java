@@ -26,6 +26,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String COL_BRUSH_DATE = "BRUSH_DATE";
     public static final String COL_BRUSH_COUNT = "BRUSH_COUNT";
 
+    private static final String WATER_TABLE_NAME = "water_table";
+    private static final String COL_WATER_DATE = "WATER_DATE";
+    private static final String COL_WATER_INTAKE = "WATER_INTAKE";
+
+
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
@@ -43,13 +48,19 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         // Create brush_table
         String createBrushTableQuery = "CREATE TABLE " + BRUSH_TABLE_NAME + " (" + COL_1 + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COL_2 + " TEXT, " + COL_BRUSH_DATE + " TEXT, " + COL_BRUSH_COUNT + " INTEGER)";
         db.execSQL(createBrushTableQuery);
+
+        // Create water_table
+        String createWaterTableQuery = "CREATE TABLE " + WATER_TABLE_NAME + " (" + COL_1 + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COL_2 + " TEXT, " + COL_WATER_DATE + " TEXT, " + COL_WATER_INTAKE + " INTEGER)";
+        db.execSQL(createWaterTableQuery);
     }
+
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + SLEEP_TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + BRUSH_TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + WATER_TABLE_NAME);
         onCreate(db);
     }
 
@@ -64,8 +75,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 
 
-    // Method to insert or update brush count for a specific date
-    // Method to insert or update brush count for a specific date
     // Method to insert or update brush count for a specific date
     public boolean updateOrInsertBrushCount(String username, String brushDate, int brushCount) {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -95,6 +104,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         String selection = COL_2 + " = ? AND " + COL_BRUSH_DATE + " = ?";
         String[] selectionArgs = {username, brushDate};
         int rowsDeleted = db.delete(BRUSH_TABLE_NAME, selection, selectionArgs);
+        return rowsDeleted > 0;
+    }
+
+    // Method to delete water intake for a specific date
+    public boolean deleteWaterIntake(String username, String waterDate) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String selection = COL_2 + " = ? AND " + COL_WATER_DATE + " = ?";
+        String[] selectionArgs = {username, waterDate};
+        int rowsDeleted = db.delete(WATER_TABLE_NAME, selection, selectionArgs);
         return rowsDeleted > 0;
     }
 
@@ -252,6 +270,43 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return null;
     }
 
+    // Method to retrieve water intake for a specific date
+    public int getWaterIntake(String waterDate, String username) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String[] columns = {COL_WATER_INTAKE};
+        String selection = COL_WATER_DATE + " = ? AND " + COL_2 + " = ?";
+        String[] selectionArgs = {waterDate, username};
+        try (Cursor cursor = db.query(WATER_TABLE_NAME, columns, selection, selectionArgs, null, null, null)) {
+            if (cursor != null && cursor.moveToFirst()) {
+                int columnIndex = cursor.getColumnIndex(COL_WATER_INTAKE);
+                if (columnIndex != -1) {
+                    int waterIntake = cursor.getInt(columnIndex);
+                    Log.d("DatabaseHelper", "Retrieved water intake: " + waterIntake);
+                    return waterIntake;
+                } else {
+                    Log.e("DatabaseHelper", "Column COL_WATER_INTAKE does not exist in the cursor");
+                }
+            } else {
+                Log.d("DatabaseHelper", "No water intake found for date: " + waterDate + ", username: " + username);
+            }
+        } catch (Exception e) {
+            Log.e("DatabaseHelper", "Error retrieving water intake: " + e.getMessage());
+        }
+        return 0;
+    }
 
+    // Method to add water intake for a specific date
+    public boolean addWaterIntake(String username, String waterDate, int intakeAmount) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(COL_2, username);
+        contentValues.put(COL_WATER_DATE, waterDate);
+        contentValues.put(COL_WATER_INTAKE, intakeAmount);
+        long result = db.insert(WATER_TABLE_NAME, null, contentValues);
+        return result != -1;
+    }
 }
+
+
+
 

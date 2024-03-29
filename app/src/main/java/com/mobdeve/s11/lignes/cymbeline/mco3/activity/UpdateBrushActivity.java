@@ -1,5 +1,6 @@
 package com.mobdeve.s11.lignes.cymbeline.mco3.activity;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
@@ -13,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.mobdeve.s11.lignes.cymbeline.mco3.R;
 import com.mobdeve.s11.lignes.cymbeline.mco3.database.DatabaseHelper;
 import com.mobdeve.s11.lignes.cymbeline.mco3.navbar.BottomNavbarHelper;
+import com.mobdeve.s11.lignes.cymbeline.mco3.navbar.TopNavBarHelper;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -32,6 +34,7 @@ public class UpdateBrushActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.update_brush);
         BottomNavbarHelper.setProfileIconClickListener(this);
+        TopNavBarHelper.setCancelClickListener(this);
 
         // Set the text for the top navigation bar
         TextView textView = findViewById(R.id.textView);
@@ -159,6 +162,9 @@ public class UpdateBrushActivity extends AppCompatActivity {
             // Log the saved brush count
             int savedBrushCount = databaseHelper.getBrushCount(loggedInUsername, currentDate);
             Log.d("UpdateBrushActivity", "Saved brush count in database: " + savedBrushCount);
+            Intent intent = new Intent(UpdateBrushActivity.this, DashboardActivity.class);
+            startActivity(intent);
+            finish();
         } else {
             Toast.makeText(this, "Failed to save brush count", Toast.LENGTH_SHORT).show();
         }

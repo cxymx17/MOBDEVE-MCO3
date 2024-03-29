@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:background="@color/button_background">
+
+	<include
+		android:id="@+id/top_navbar_save"
+		layout="@layout/top_navbar_save"
+		app:layout_constraintTop_toTopOf="parent" />
+
+	<!-- Bottom navigation bar layout -->
+	<include
+		android:id="@+id/bottom_navbar"
+		layout="@layout/bottom_navbar"
+		app:layout_constraintBottom_toBottomOf="parent" />
+
+	<!-- Content layout -->
+	<RelativeLayout
+		android:id="@+id/content_container"
+		android:layout_width="match_parent"
+		android:layout_height="0dp"
+		app:layout_constraintTop_toBottomOf="@id/top_navbar_save">
+
+		<!-- HorizontalScrollView for additional content -->
+
+		<androidx.constraintlayout.widget.ConstraintLayout
+			android:id="@+id/page_update__water_ek1"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content">
+
+
+			<TextView
+				android:id="@+id/update_water"
+				android:layout_width="149dp"
+				android:layout_height="24.5dp"
+				android:layout_gravity="center_horizontal|center"
+				android:layout_marginStart="125dp"
+				android:layout_marginTop="16dp"
+				android:layout_marginEnd="181dp"
+				android:layout_marginBottom="660dp"
+				android:gravity="center"
+				android:text="@string/update_water_string"
+				android:textColor="@color/update_water_color"
+				android:textSize="15sp"
+				android:textStyle="bold"
+				app:layout_constraintBottom_toBottomOf="parent"
+				app:layout_constraintEnd_toEndOf="parent"
+				app:layout_constraintHorizontal_bias="0.0"
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintTop_toTopOf="parent"
+				app:layout_constraintVertical_bias="1.0" />
+
+			<TextView
+				android:id="@+id/one_glass___250_ml"
+				android:layout_width="109dp"
+				android:layout_height="24dp"
+				android:layout_marginStart="150dp"
+				android:layout_marginTop="46dp"
+				android:text="@string/one_glass___250_ml_string"
+				android:textColor="@color/update_water_color"
+				android:textSize="12sp"
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintTop_toTopOf="parent" />
+
+			<TextView
+				android:id="@+id/waterAmount"
+				android:layout_width="177dp"
+				android:layout_height="35dp"
+				android:layout_marginStart="156dp"
+				android:layout_marginTop="436dp"
+				android:layout_marginEnd="141dp"
+				android:gravity="center|center_horizontal|center_vertical"
+				android:text="@string/_1785_ml_string"
+				android:textColor="@color/update_water_color"
+				android:textSize="25sp"
+				android:textStyle="bold"
+				app:layout_constraintEnd_toEndOf="parent"
+				app:layout_constraintHorizontal_bias="0.5"
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintTop_toTopOf="parent" />
+
+			<TextView
+				android:id="@+id/outOf"
+				android:layout_width="119dp"
+				android:layout_height="60dp"
+				android:layout_marginStart="148dp"
+				android:layout_marginTop="480dp"
+				android:gravity="center|center_horizontal|center_vertical"
+				android:text="@string/outOf"
+				android:textColor="@color/update_water_color"
+				android:textSize="25sp"
+				android:textStyle="bold"
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintTop_toTopOf="parent" />
+
+			<View
+				android:id="@+id/addButton"
+				android:layout_width="228dp"
+				android:layout_height="60dp"
+				android:layout_marginStart="92dp"
+				android:layout_marginTop="548dp"
+				android:background="@drawable/rectangle_23_shape"
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintTop_toTopOf="parent" />
+
+			<TextView
+				android:id="@+id/add_glass"
+				android:layout_width="85dp"
+				android:layout_height="26dp"
+				android:layout_gravity="center_horizontal|center"
+				android:layout_marginStart="167dp"
+				android:layout_marginTop="568dp"
+				android:text="@string/add_glass_string"
+				android:textColor="@color/add_glass_color"
+				android:textSize="15sp"
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintTop_toTopOf="parent" />
+
+			<ProgressBar
+				android:id="@+id/vertical_progress_bar"
+				style="?android:attr/progressBarStyleHorizontal"
+				android:layout_width="300dp"
+				android:layout_height="190dp"
+				android:layout_marginStart="50dp"
+				android:layout_marginTop="170dp"
+				android:indeterminate="false"
+				android:max="100"
+				android:progress="90"
+				android:progressDrawable="@drawable/water_progress_bar_drawable"
+				android:rotation="-90"
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintTop_toTopOf="parent" />
+
+			<ImageView
+				android:id="@+id/image_28"
+				android:layout_width="253dp"
+				android:layout_height="328dp"
+				android:layout_marginStart="80dp"
+				android:layout_marginTop="99dp"
+				android:layout_marginEnd="133dp"
+				android:layout_marginBottom="273dp"
+				android:contentDescription="image_28"
+				android:src="@drawable/image_28"
+				app:layout_constraintBottom_toBottomOf="parent"
+				app:layout_constraintEnd_toEndOf="parent"
+				app:layout_constraintHorizontal_bias="0.136"
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintTop_toTopOf="parent"
+				app:layout_constraintVertical_bias="0.0" />
+
+
+		</androidx.constraintlayout.widget.ConstraintLayout>
+
+	</RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
