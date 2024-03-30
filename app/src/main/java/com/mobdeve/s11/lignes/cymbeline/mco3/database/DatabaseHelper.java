@@ -191,18 +191,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return db.rawQuery("SELECT * FROM " + TABLE_NAME, null);
     }
 
-    // Method to update user details
-    public boolean updateUserDetails(String username, String password, String email, String bday) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues contentValues = new ContentValues();
-        contentValues.put(COL_3, password);
-        contentValues.put(COL_4, email);
-        contentValues.put(COL_5, bday);
-
-        int rowsAffected = db.update(TABLE_NAME, contentValues, COL_2 + "=?", new String[]{username});
-        return rowsAffected > 0;
-    }
-
     // Method to insert or update sleep hours for a specific date
     public boolean updateOrInsertSleepHours(String sleepDate, String sleepHours) {
         SQLiteDatabase db = this.getWritableDatabase();

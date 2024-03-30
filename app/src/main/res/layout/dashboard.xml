@@ -149,7 +149,7 @@
 					android:layout_width="79dp"
 					android:layout_height="77dp" />
 
-				<TextView android:id="@+id/_76__ek1"
+				<TextView android:id="@+id/textView_76__ek1"
 					android:textStyle="bold"
 					android:layout_gravity="center_horizontal|center"
 					android:gravity="center"
@@ -204,7 +204,7 @@
 
 
 
-				<TextView android:id="@+id/_76_"
+				<TextView android:id="@+id/textView_76"
 					android:textStyle="bold"
 					android:layout_gravity="center_horizontal|center"
 					android:gravity="center"

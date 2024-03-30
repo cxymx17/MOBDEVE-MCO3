@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "277484831779",
+    "project_id": "mco3-8df87",
+    "storage_bucket": "mco3-8df87.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:277484831779:android:08571fbc118bf259ce1d96",
+        "android_client_info": {
+          "package_name": "com.mobdeve.s11.lignes.cymbeline.mco3"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB-SmhcWdmfcSKmvaHumIEccrhg5zyxPlg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

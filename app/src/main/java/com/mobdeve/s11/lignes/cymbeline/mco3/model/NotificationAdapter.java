@@ -13,7 +13,7 @@ import com.mobdeve.s11.lignes.cymbeline.mco3.R;
 import java.util.List;
 
 public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapter.ViewHolder> {
-    private List<Notification> notificationList;
+    private final List<Notification> notificationList;
 
     public NotificationAdapter(List<Notification> notificationList) {
         this.notificationList = notificationList;
@@ -37,6 +37,11 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
     @Override
     public int getItemCount() {
         return notificationList.size();
+    }
+
+    public void addNotification(Notification notification) {
+        notificationList.add(notification);
+        notifyItemInserted(notificationList.size() - 1); // Notify adapter about the new item
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

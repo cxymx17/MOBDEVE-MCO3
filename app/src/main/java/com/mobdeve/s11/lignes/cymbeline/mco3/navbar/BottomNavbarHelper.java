@@ -6,16 +6,21 @@ import android.widget.ImageView;
 import com.mobdeve.s11.lignes.cymbeline.mco3.R;
 import com.mobdeve.s11.lignes.cymbeline.mco3.activity.NotificationActivity;
 import com.mobdeve.s11.lignes.cymbeline.mco3.activity.UserProfileActivity;
-import com.mobdeve.s11.lignes.cymbeline.mco3.activity.DashboardActivity; // Import DashboardActivity
+import com.mobdeve.s11.lignes.cymbeline.mco3.activity.DashboardActivity;
+import com.mobdeve.s11.lignes.cymbeline.mco3.activity.ui.learn.LearnActivity;
+
 
 public class BottomNavbarHelper {
     public static void setProfileIconClickListener(Activity activity) {
+
+        // Set click listener for profileIcon
         ImageView profileIcon = activity.findViewById(R.id.profileIcon);
         profileIcon.setOnClickListener(v -> {
             Intent intent = new Intent(activity, UserProfileActivity.class);
             activity.startActivity(intent);
         });
 
+        // Set click listener for notificationIcon
         ImageView notificationIcon = activity.findViewById(R.id.notificationIcon);
         notificationIcon.setOnClickListener(v -> {
             Intent intent = new Intent(activity, NotificationActivity.class);
@@ -26,6 +31,13 @@ public class BottomNavbarHelper {
         ImageView homeIcon = activity.findViewById(R.id.homeIcon);
         homeIcon.setOnClickListener(v -> {
             Intent intent = new Intent(activity, DashboardActivity.class);
+            activity.startActivity(intent);
+        });
+
+        // Set click listener for tipsIcon
+        ImageView tips = activity.findViewById(R.id.tipsIcon);
+        tips.setOnClickListener(v -> {
+            Intent intent = new Intent(activity, LearnActivity.class);
             activity.startActivity(intent);
         });
     }
