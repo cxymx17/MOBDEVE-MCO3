@@ -12,6 +12,11 @@ import com.mobdeve.s11.lignes.cymbeline.mco3.R;
 import com.mobdeve.s11.lignes.cymbeline.mco3.database.DatabaseHelper;
 import com.mobdeve.s11.lignes.cymbeline.mco3.navbar.BottomNavbarHelper;
 
+/**
+ * UserProfileActivity displays the user's profile information.
+ * It shows the user's initials and a greeting message.
+ * Users can log out from this activity.
+ */
 public class UserProfileActivity extends AppCompatActivity {
     private TextView initialTextView;
     private DatabaseHelper databaseHelper;

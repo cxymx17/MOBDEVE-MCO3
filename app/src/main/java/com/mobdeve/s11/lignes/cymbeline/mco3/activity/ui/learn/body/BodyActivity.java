@@ -19,6 +19,10 @@ import com.mobdeve.s11.lignes.cymbeline.mco3.databinding.ActivityBodyBinding;
 import com.mobdeve.s11.lignes.cymbeline.mco3.databinding.ActivityFaceBinding;
 import com.mobdeve.s11.lignes.cymbeline.mco3.navbar.BottomNavbarHelper;
 
+/**
+ * Activity class for displaying body-related learning content.
+ * This activity displays options related to different aspects of the body.
+ */
 public class BodyActivity extends AppCompatActivity {
     ActivityBodyBinding binding;
 
@@ -28,6 +32,8 @@ public class BodyActivity extends AppCompatActivity {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_body);
         TextView textView = findViewById(R.id.textView);
         textView.setText("Body");
+
+        // Set click listeners for each card view to navigate to the detail activity with the appropriate mode
         binding.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

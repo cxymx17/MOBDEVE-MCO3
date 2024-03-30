@@ -12,6 +12,15 @@ import androidx.cardview.widget.CardView;
 import com.mobdeve.s11.lignes.cymbeline.mco3.R;
 import com.mobdeve.s11.lignes.cymbeline.mco3.database.DatabaseHelper;
 
+
+/**
+ * RegisterActivity allows users to register for a new account. It includes EditText fields
+ * for entering the username, email address, birthday, and password. Upon clicking the
+ * registration button, the registerUser method is called to validate the input fields
+ * and insert the user data into the database using the DatabaseHelper class. If the
+ * registration is successful, the user is redirected to the MainActivity.
+ */
+
 public class RegisterActivity extends AppCompatActivity {
     DatabaseHelper myDb;
     EditText registerUsername, registerEmailAddress, registerBday, registerPassword;
@@ -37,6 +46,14 @@ public class RegisterActivity extends AppCompatActivity {
         });
     }
 
+    /*
+     * The registerUser() method handles user registration.
+     * It retrieves user input from the registration form fields, validates them,
+     * and then checks if the user already exists in the database.
+     * If the user does not exist, it inserts the user data into the database.
+     * It displays appropriate Toast messages to inform the user about the registration status.
+     * If registration is successful, it starts the MainActivity and finishes the RegisterActivity.
+     */
     public void registerUser() {
         String username = registerUsername.getText().toString().trim();
         String emailAddress = registerEmailAddress.getText().toString().trim();

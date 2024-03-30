@@ -13,6 +13,10 @@ import com.mobdeve.s11.lignes.cymbeline.mco3.R;
 import com.mobdeve.s11.lignes.cymbeline.mco3.databinding.ActivityDetailBinding;
 import com.mobdeve.s11.lignes.cymbeline.mco3.navbar.BottomNavbarHelper;
 
+/**
+ * Activity class for displaying detailed information based on selected learning modes.
+ * This activity displays specific information and associated YouTube videos for each learning mode.
+ */
 public class DetailActivity extends AppCompatActivity {
 
     private ActivityDetailBinding binding;

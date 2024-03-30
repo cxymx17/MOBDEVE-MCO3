@@ -13,6 +13,9 @@ import com.mobdeve.s11.lignes.cymbeline.mco3.R;
 
 import java.util.Map;
 
+/**
+ * Service class for handling Firebase Cloud Messaging (FCM) messages.
+ */
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
     @Override
@@ -44,7 +47,12 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         }
     }
 
-    // Method to display a notification
+    /**
+     * Method to display a notification.
+     *
+     * @param title the title of the notification
+     * @param body  the body of the notification
+     */
     private void sendNotification(String title, String body) {
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, "notify")
                 .setSmallIcon(R.drawable.notification) // Set your small icon here

@@ -16,6 +16,10 @@ import com.mobdeve.s11.lignes.cymbeline.mco3.activity.ui.learn.style.StyleActivi
 import com.mobdeve.s11.lignes.cymbeline.mco3.databinding.ActivityLearnBinding;
 import com.mobdeve.s11.lignes.cymbeline.mco3.navbar.BottomNavbarHelper;
 
+/**
+ * Activity class for displaying learning categories.
+ * This activity serves as the main hub for accessing different learning categories.
+ */
 public class LearnActivity extends AppCompatActivity {
     ActivityLearnBinding binding;
 

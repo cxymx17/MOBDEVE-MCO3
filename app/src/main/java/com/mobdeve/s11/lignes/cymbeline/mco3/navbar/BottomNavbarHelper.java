@@ -10,9 +10,17 @@ import com.mobdeve.s11.lignes.cymbeline.mco3.activity.DashboardActivity;
 import com.mobdeve.s11.lignes.cymbeline.mco3.activity.ui.learn.LearnActivity;
 
 
+/**
+ * Helper class for setting click listeners for bottom navigation bar icons.
+ */
 public class BottomNavbarHelper {
-    public static void setProfileIconClickListener(Activity activity) {
 
+    /**
+     * Sets click listeners for bottom navigation bar icons.
+     *
+     * @param activity the activity where the bottom navigation bar icons are located
+     */
+    public static void setProfileIconClickListener(Activity activity) {
         // Set click listener for profileIcon
         ImageView profileIcon = activity.findViewById(R.id.profileIcon);
         profileIcon.setOnClickListener(v -> {

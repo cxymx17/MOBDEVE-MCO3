@@ -66,11 +66,19 @@
             android:exported="true">
         </activity>
         <activity
+            android:name=".navbar.TopNavBarHelper"
+            android:exported="true">
+        </activity>
+        <activity
             android:name=".activity.UpdateSleepActivity"
             android:exported="true">
         </activity>
         <activity
             android:name=".activity.UpdateBrushActivity"
+            android:exported="true">
+        </activity>
+        <activity
+            android:name=".activity.UpdateWaterActivity"
             android:exported="true">
         </activity>
 

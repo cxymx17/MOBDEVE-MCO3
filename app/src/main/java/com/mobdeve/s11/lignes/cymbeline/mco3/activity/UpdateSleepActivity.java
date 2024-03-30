@@ -1,5 +1,7 @@
 package com.mobdeve.s11.lignes.cymbeline.mco3.activity;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
@@ -12,10 +14,23 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.mobdeve.s11.lignes.cymbeline.mco3.R;
 import com.mobdeve.s11.lignes.cymbeline.mco3.database.DatabaseHelper;
 import com.mobdeve.s11.lignes.cymbeline.mco3.navbar.BottomNavbarHelper;
+import com.mobdeve.s11.lignes.cymbeline.mco3.navbar.TopNavBarHelper;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
+
+/**
+ * UpdateSleepActivity allows users to update their sleep hours for the current day.
+ * Users can input the number of hours they slept, and the activity displays the
+ * sleep duration in both text and visual format using a progress bar. Users can save
+ * their input, and the data is stored in the database. The activity retrieves the
+ * previously saved sleep hours, if any, and displays them to the user. Sleep hours
+ * can be updated or deleted, and the changes are reflected in the database and
+ * visually updated in the UI. The activity also provides navigation options to
+ * return to the dashboard and supports automatic data reloading when the activity
+ * is resumed.
+ */
 
 public class UpdateSleepActivity extends AppCompatActivity {
 
@@ -29,6 +44,7 @@ public class UpdateSleepActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.update_sleep);
         BottomNavbarHelper.setProfileIconClickListener(this);
+        TopNavBarHelper.setCancelClickListener(this);
 
         // Set the text for the top navigation bar
         TextView textView = findViewById(R.id.textView);
@@ -51,12 +67,19 @@ public class UpdateSleepActivity extends AppCompatActivity {
         });
     }
 
+    /*
+     * The onResume() method is overridden to reload sleep hours data whenever the activity is resumed.
+     */
     @Override
     protected void onResume() {
         super.onResume();
         loadSleepHours();
     }
 
+    /*
+     * The loadSleepHours() method retrieves sleep hours data for the current date from the database
+     * and updates the UI elements accordingly.
+     */
     private void loadSleepHours() {
         // Get the current date
         Calendar calendar = Calendar.getInstance();
@@ -64,7 +87,9 @@ public class UpdateSleepActivity extends AppCompatActivity {
         String currentDate = sdf.format(calendar.getTime());
 
         // Retrieve sleep hours for the current date from the database
-        String sleepHours = databaseHelper.getSleepHours(currentDate);
+        SharedPreferences sharedPreferences = getSharedPreferences("user_session", MODE_PRIVATE);
+        String loggedInUsername = sharedPreferences.getString("username", "");
+        String sleepHours = databaseHelper.getSleepHours(currentDate, loggedInUsername);
 
         // Display the retrieved sleep hours
         if (sleepHours != null) {
@@ -86,41 +111,44 @@ public class UpdateSleepActivity extends AppCompatActivity {
         }
     }
 
-
+    /*
+     * The saveSleepHours() method saves the input sleep hours to the database for the current date.
+     * It then reloads the sleep hours data to reflect the changes and updates the UI.
+     */
     private void saveSleepHours() {
-        // Get the current date and time
+        // Get the current logged-in username
+        SharedPreferences sharedPreferences = getSharedPreferences("user_session", MODE_PRIVATE);
+        String loggedInUsername = sharedPreferences.getString("username", "");
+
+        // Get the current date
         Calendar calendar = Calendar.getInstance();
-        SimpleDateFormat sdfDate = new SimpleDateFormat("MM/dd/yyyy", Locale.getDefault());
-        SimpleDateFormat sdfTime = new SimpleDateFormat("HH:mm", Locale.getDefault());
-        String currentDate = sdfDate.format(calendar.getTime());
-        String currentTime = sdfTime.format(calendar.getTime());
+        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy", Locale.getDefault());
+        String currentDate = sdf.format(calendar.getTime());
 
         // Get the input hours
         String hours = inputHours.getText().toString().trim();
 
-        // Check if the current time is before 11:59 PM for the current day
-        if (currentTime.equals("23:59") || !hours.isEmpty()) {
-            // Save sleep hours to the database
-            boolean success;
-            if (hours.isEmpty()) {
-                // If sleep hours are empty, delete the record from the database
-                success = databaseHelper.deleteSleepHours(currentDate);
-            } else {
-                // Update or insert sleep hours
-                success = databaseHelper.updateOrInsertSleepHours(currentDate, hours);
-            }
-
-            if (success) {
-                // Update the displayed sleep hours and progress bar
-                loadSleepHours();
-                Toast.makeText(this, "Sleep hours saved successfully", Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(this, "Failed to save sleep hours", Toast.LENGTH_SHORT).show();
-            }
+        // Update or insert sleep hours
+        boolean success;
+        if (hours.isEmpty()) {
+            // If sleep hours are empty, delete the record from the database
+            success = databaseHelper.deleteSleepHours(loggedInUsername, currentDate);
         } else {
-            // User can input new data for the new day
-            inputHours.setText("");
-            Toast.makeText(this, "You can now input new data for the new day", Toast.LENGTH_SHORT).show();
+            // Update or insert sleep hours
+            success = databaseHelper.updateOrInsertSleepHours(loggedInUsername, currentDate, hours);
+        }
+
+        if (success) {
+            // Show toast message
+            Toast.makeText(this, "Sleep hours saved successfully", Toast.LENGTH_SHORT).show();
+
+            // Reload the data to display the newly saved sleep hours
+            loadSleepHours();
+            Intent intent = new Intent(UpdateSleepActivity.this, DashboardActivity.class);
+            startActivity(intent);
+            finish();
+        } else {
+            Toast.makeText(this, "Failed to save sleep hours", Toast.LENGTH_SHORT).show();
         }
     }
 }

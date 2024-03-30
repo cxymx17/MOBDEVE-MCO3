@@ -37,6 +37,17 @@
 
     <string name="update_brush_string">UPDATE BRUSH</string>
 
+    <!-- update__water strings -->
+
+
+    <string name="update_water_string">UPDATE WATER</string>
+    <string name="one_glass___250_ml_string">One Glass = 250 ml</string>
+    <string name="_1785_ml_string">1890 ml</string>
+    <string name="outOf">7 out of 8</string>
+    <string name="add_glass_string">ADD GLASS</string>
+    <string name="_750_ml_string">750 ml </string>
+    <string name="_42__string">42%</string>
+
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">First Fragment</string>
     <string name="second_fragment_label">Second Fragment</string>
@@ -44,15 +55,14 @@
     <string name="previous">Previous</string>
     <string name="earneye">
 
+    OVERVIEW :
 
-OVERVIEW :
+    Eyes and eyebrows are crucial for grating is they frame-the face and contribute significantly to avered Tacial expression
 
-Eyes and eyebrows are crucial for grating is they frame-the face and contribute significantly to avered Tacial expression
+    Wall groomed eyebrows can enhance symmetry and attractiveness while cared for eyes convey vitality and personality
 
-Wall groomed eyebrows can enhance symmetry and attractiveness while cared for eyes convey vitality and personality
-
-They serve as fecal points, fluencing how others perceive ones appearance and demeanor making thes essential for both men and women seeking το πριονέ their looks
-</string>
+    They serve as fecal points, fluencing how others perceive ones appearance and demeanor making thes essential for both men and women seeking το πριονέ their looks
+    </string>
 
 
     <string name="lorem_ipsum">

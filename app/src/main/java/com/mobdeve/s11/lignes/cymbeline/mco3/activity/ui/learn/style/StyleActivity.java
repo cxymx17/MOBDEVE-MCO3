@@ -13,6 +13,10 @@ import com.mobdeve.s11.lignes.cymbeline.mco3.activity.ui.learn.detail.DetailActi
 import com.mobdeve.s11.lignes.cymbeline.mco3.databinding.ActivityStyleBinding;
 import com.mobdeve.s11.lignes.cymbeline.mco3.navbar.BottomNavbarHelper;
 
+/**
+ * Activity class for displaying style-related learning categories.
+ * This activity allows users to navigate to specific detail activities for each category.
+ */
 public class StyleActivity extends AppCompatActivity {
     ActivityStyleBinding binding;
 

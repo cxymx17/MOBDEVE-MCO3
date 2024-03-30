@@ -5,7 +5,7 @@
     <item android:id="@+id/background_circle">
         <shape
             android:shape="ring"
-            android:thicknessRatio="10"
+            android:thicknessRatio="20"
             android:useLevel="false">
             <solid android:color="#FFFFFF"/> <!-- Background color when progress is 0 -->
         </shape>
@@ -15,9 +15,9 @@
     <item android:id="@+id/progress_circle">
             <shape
                 android:shape="ring"
-                android:thicknessRatio="10"
+                android:thicknessRatio="20"
                 android:useLevel="true">
-                <solid android:color="@color/rectangle_8_color"/>
+                <solid android:color="@color/rectangle_9_color"/>
             </shape>
         ]
     </item>

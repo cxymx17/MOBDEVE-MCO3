@@ -17,10 +17,20 @@ import androidx.core.app.NotificationManagerCompat;
 
 import com.mobdeve.s11.lignes.cymbeline.mco3.R;
 
+/**
+ * NotificationReceiver is a BroadcastReceiver responsible for receiving notifications and showing them to the user.
+ */
 public class NotificationReceiver extends BroadcastReceiver {
 
     private static final String CHANNEL_ID = "default";
 
+    /**
+     * Shows a notification with the specified title and message.
+     *
+     * @param context the context
+     * @param title   the title of the notification
+     * @param message the message of the notification
+     */
     public static void showNotification(Context context, String title, String message) {
         createNotificationChannel(context);
 
@@ -37,7 +47,11 @@ public class NotificationReceiver extends BroadcastReceiver {
         notificationManager.notify(123, builder.build());
     }
 
-
+    /**
+     * Creates a notification channel for the app.
+     *
+     * @param context the context
+     */
     private static void createNotificationChannel(Context context) {
         // Create notification channel if not already created
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -56,7 +70,6 @@ public class NotificationReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-
+        // Handle receiving of notifications, if needed
     }
 }
-

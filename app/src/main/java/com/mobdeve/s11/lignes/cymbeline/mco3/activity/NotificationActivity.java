@@ -24,6 +24,14 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+/**
+ * NotificationActivity displays a list of notifications for the user. It schedules
+ * notifications for various events such as brushing teeth, drinking water, and sleeping.
+ * The notifications are displayed in a RecyclerView using NotificationAdapter.
+ * This activity also sets up the top navigation bar, schedules notifications, and updates
+ * the notification list accordingly.
+ */
+
 public class NotificationActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
@@ -56,7 +64,11 @@ public class NotificationActivity extends AppCompatActivity {
         BottomNavbarHelper.setProfileIconClickListener(this);
     }
 
-    // Method to schedule notifications
+    /*
+     * The scheduleNotifications() method schedules notifications based on the current time.
+     * It schedules notifications for morning brushing, lunch brushing, night brushing,
+     * morning water drinking, and night sleep.
+     */
     private void scheduleNotifications() {
         // Get the current time
         Calendar calendar = Calendar.getInstance();
@@ -89,13 +101,22 @@ public class NotificationActivity extends AppCompatActivity {
 
     }
 
+    /*
+     * The getNotifications() method retrieves a list of notifications.
+     * Currently, it returns an empty list, but it can be extended to fetch notifications from a data source.
+     */
     private List<Notification> getNotifications() {
         List<Notification> notifications = new ArrayList<>();
         return notifications;
     }
 
 
-    // Method to schedule a single notification
+    /*
+     * The scheduleNotification() method schedules a single notification.
+     * It creates an intent for the NotificationReceiver class, sets the required extras,
+     * creates a pending intent, and schedules it using the AlarmManager.
+     * It also updates the notification list to include the scheduled notification.
+     */
     private void scheduleNotification(String message, int notificationId, String time) {
         Intent notificationIntent = new Intent(this, NotificationReceiver.class);
         notificationIntent.putExtra("notificationId", notificationId);

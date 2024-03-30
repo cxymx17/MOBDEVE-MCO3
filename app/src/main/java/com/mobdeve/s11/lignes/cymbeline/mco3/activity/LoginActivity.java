@@ -1,4 +1,3 @@
-// LoginActivity.java
 package com.mobdeve.s11.lignes.cymbeline.mco3.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,10 +13,22 @@ import android.widget.Toast;
 import com.mobdeve.s11.lignes.cymbeline.mco3.R;
 import com.mobdeve.s11.lignes.cymbeline.mco3.database.DatabaseHelper;
 
+
+/**
+ * LoginActivity handles user authentication by checking the entered username and password
+ * against the database. Upon successful login, it stores the logged-in user's username in
+ * SharedPreferences and navigates to the UserProfileActivity. If the login credentials are
+ * invalid, it displays a toast message indicating the same.
+ */
+
 public class LoginActivity extends AppCompatActivity {
     DatabaseHelper myDb;
     EditText loginUsername, loginPassword;
 
+    /*
+     * The onCreate() method is called when the activity is first created.
+     * It initializes the activity's UI and sets up the login button click listener.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,6 +47,12 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
+    /*
+     * The loginUser() method is responsible for authenticating the user
+     * by checking the entered username and password against the database.
+     * If the credentials are valid, it stores the username in SharedPreferences
+     * and starts the UserProfileActivity. Otherwise, it displays an error message.
+     */
     public void loginUser() {
         String username = loginUsername.getText().toString().trim();
         String password = loginPassword.getText().toString().trim();

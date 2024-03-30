@@ -1,4 +1,3 @@
-// MainActivity.java
 package com.mobdeve.s11.lignes.cymbeline.mco3.activity;
 
 import static android.content.ContentValues.TAG;
@@ -18,6 +17,14 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.mobdeve.s11.lignes.cymbeline.mco3.R;
 import com.mobdeve.s11.lignes.cymbeline.mco3.model.NotificationReceiver;
+
+
+/**
+ * MainActivity serves as the entry point of the application. It sets up the layout
+ * and handles user interactions such as logging in or registering. It also retrieves
+ * the Firebase Cloud Messaging (FCM) token for push notifications and manually triggers
+ * the notification receiver.
+ */
 
 public class MainActivity extends AppCompatActivity {
 
