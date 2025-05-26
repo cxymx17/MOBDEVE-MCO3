@@ -1,4 +1,4 @@
-# FreshStart 
+# FreshStart App
 
 ## Self-care app
 
